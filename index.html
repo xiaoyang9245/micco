@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新世界·想象之上</title>
+    <link rel="icon" type="image/png" href="newworld-logo.png">
+    <style>
+        :root {
+            --pixel-gold: #e8c34b;
+            --pixel-ember: #e07a3d;
+            --pixel-ember-bright: #f5a052;
+            --text-bright: #f5f0e0;
+            --text-dim: #b0a890;
+            --glow-gold: rgba(232,195,75,0.55);
+            --glow-ember: rgba(224,122,61,0.65);
+            --charge-blue: #5a9eff;
+            --charge-pink: #ff6b9d;
+            --mc-panel-bg: #2a2218;
+            --mc-panel-inner: #1e1810;
+            --mc-border-light: #6b5a3e;
+            --mc-border-dark: #1a1208;
+            --mc-card-bg: #2e261a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #0d0a05;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            letter-spacing: 0.03em;
+            line-height: 1.6;
+            font-size: 15px;
+            overflow-x: hidden;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            color: var(--text-bright);
+            background-image:
+                repeating-linear-gradient(0deg, rgba(80,60,30,0.08) 0px, rgba(80,60,30,0.08) 1px, transparent 1px, transparent 8px),
+                repeating-linear-gradient(90deg, rgba(80,60,30,0.08) 0px, rgba(80,60,30,0.08) 1px, transparent 1px, transparent 8px),
+                radial-gradient(ellipse at 50% 0%, rgba(180,140,60,0.1) 0%, transparent 60%);
+        }
+
+        #star-canvas { position: fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+
+        .pixel-crt {
+            width: 100%;
+            max-width: 1200px;
+            max-height: 95vh;
+            position: relative;
+            z-index: 10;
+            background: var(--mc-panel-bg);
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px);
+            border: 5px solid var(--mc-border-dark);
+            border-top-color: var(--mc-border-light);
+            border-left-color: var(--mc-border-light);
+            border-right-color: #3a2a18;
+            border-bottom-color: #3a2a18;
+            box-shadow:
+                0 0 0 3px #0a0804,
+                0 0 0 8px var(--mc-border-dark),
+                0 0 20px rgba(0,0,0,0.7),
+                inset 0 0 30px rgba(0,0,0,0.4),
+                inset 2px 2px 0 rgba(255,255,255,0.03),
+                inset -2px -2px 0 rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: filter 0.3s;
+            border-radius: 2px;
+        }
+
+        .pixel-crt.powering-up-blue {
+            animation: borderChargeBlue 0.3s ease-in-out 3 alternate; filter: brightness(1.15);
+        }
+        @keyframes borderChargeBlue {
+            0% { box-shadow: 0 0 0 3px #0a0804, 0 0 0 8px var(--mc-border-dark), 0 0 30px rgba(90,158,255,0.3), 0 0 60px rgba(90,158,255,0.2), inset 0 0 30px rgba(0,0,0,0.4); }
+            100% { box-shadow: 0 0 0 3px #0a0804, 0 0 0 8px #5a9eff, 0 0 50px rgba(90,200,255,0.6), 0 0 100px rgba(255,180,30,0.3), inset 0 0 40px rgba(90,200,255,0.1); }
+        }
+
+        .pixel-crt.powering-up-pink {
+            animation: borderChargePink 0.3s ease-in-out 3 alternate; filter: brightness(1.15);
+        }
+        @keyframes borderChargePink {
+            0% { box-shadow: 0 0 0 3px #0a0804, 0 0 0 8px var(--mc-border-dark), 0 0 30px rgba(255,107,157,0.3), 0 0 60px rgba(255,107,157,0.2), inset 0 0 30px rgba(0,0,0,0.4); }
+            100% { box-shadow: 0 0 0 3px #0a0804, 0 0 0 8px #ff6b9d, 0 0 50px rgba(255,100,180,0.6), 0 0 100px rgba(255,150,200,0.3), inset 0 0 40px rgba(255,107,157,0.1); }
+        }
+
+        .pixel-corner {
+            position: absolute; z-index: 15; width: 20px; height: 20px;
+            background: var(--pixel-gold);
+            box-shadow: 0 0 10px var(--glow-gold), inset 1px 1px 0 rgba(255,255,255,0.3), inset -1px -1px 0 rgba(0,0,0,0.3);
+            pointer-events: none;
+        }
+        .pixel-corner.tl { top: -5px; left: -5px; clip-path: polygon(0 0, 100% 0, 100% 5px, 5px 5px, 5px 100%, 0 100%); }
+        .pixel-corner.tr { top: -5px; right: -5px; clip-path: polygon(0 0, 100% 0, 100% 100%, calc(100% - 5px) 100%, calc(100% - 5px) 5px, 0 5px); }
+        .pixel-corner.bl { bottom: -5px; left: -5px; clip-path: polygon(0 0, 5px 0, 5px calc(100% - 5px), 100% calc(100% - 5px), 100% 100%, 0 100%); }
+        .pixel-corner.br { bottom: -5px; right: -5px; clip-path: polygon(0 0, 100% 0, 100% 5px, calc(100% - 5px) 5px, calc(100% - 5px) 100%, 0 100%); }
+
+        .main-screen {
+            flex: 1;
+            padding: 18px 24px;
+            overflow-y: auto;
+        }
+        .main-screen::-webkit-scrollbar { width: 6px; }
+        .main-screen::-webkit-scrollbar-track { background: #1e1810; border-left: 2px solid #3a2a18; }
+        .main-screen::-webkit-scrollbar-thumb { background: #6b5a3e; border: 2px solid #3a2a18; }
+        .main-screen::-webkit-scrollbar-thumb:hover { background: #8b6b4a; }
+
+        .header-block {
+            text-align: center;
+            margin-bottom: 18px;
+            border: 4px solid var(--mc-border-dark);
+            border-top-color: #5a4a3a;
+            border-left-color: #5a4a3a;
+            border-right-color: #2a1a0a;
+            border-bottom-color: #2a1a0a;
+            padding: 16px 20px;
+            background: var(--mc-panel-inner);
+            background-image:
+                linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 50%, rgba(0,0,0,0.05) 100%);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.4), 0 0 0 2px #0a0804;
+        }
+        .scanline-text {
+            font-size: 11px;
+            letter-spacing: 0.4em;
+            color: #8a7a5a;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .pixel-title {
+            font-size: clamp(22px, 5vw, 36px);
+            color: var(--pixel-gold);
+            letter-spacing: 0.15em;
+            text-shadow: 3px 3px 0 #1a1208, 0 0 15px var(--glow-gold), 0 0 30px rgba(232,195,75,0.3);
+            margin: 0 auto 6px auto;
+            transition: transform 0.15s;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+        .pixel-title.title-active { animation: titlePulse 0.8s ease-in-out infinite; }
+        @keyframes titlePulse {
+            0% { transform: scale(1); text-shadow: 3px 3px 0 #1a1208, 0 0 20px var(--charge-blue), 0 0 40px var(--charge-blue); }
+            50% { transform: scale(1.05); text-shadow: 3px 3px 0 #1a1208, 0 0 30px var(--charge-pink), 0 0 60px var(--charge-pink); }
+            100% { transform: scale(1); text-shadow: 3px 3px 0 #1a1208, 0 0 20px var(--charge-blue), 0 0 40px var(--charge-blue); }
+        }
+        .sub-header {
+            display: block;
+            font-size: 11px;
+            color: #9a8a6a;
+            letter-spacing: 0.15em;
+            border-top: 2px dashed #4a3a2a;
+            padding-top: 7px;
+            margin-top: 4px;
+        }
+
+        .server-info-strip {
+            background: #1a1208;
+            border: 3px solid var(--mc-border-dark);
+            border-top-color: #4a3a2a;
+            border-left-color: #4a3a2a;
+            border-right-color: #1a0a00;
+            border-bottom-color: #1a0a00;
+            padding: 10px 18px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 22px;
+            flex-wrap: wrap;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.4), 0 0 0 2px #0a0804;
+            text-align: center;
+        }
+        .server-tag {
+            font-size: 12px;
+            color: #b0a080;
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .dot-indicator {
+            width: 10px;
+            height: 10px;
+            background: #aaa;
+            box-shadow: 0 0 6px #aaa;
+            transition: background 0.3s, box-shadow 0.3s;
+            border: 2px solid #000;
+        }
+        .server-tag em { color: #e0d0b0; font-style: normal; }
+
+        .portal-panel {
+            background: var(--mc-panel-inner);
+            border: 4px solid var(--mc-border-dark);
+            border-top-color: #5a4a3a;
+            border-left-color: #5a4a3a;
+            border-right-color: #2a1a0a;
+            border-bottom-color: #2a1a0a;
+            padding: 14px 20px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            box-shadow: inset 0 0 18px rgba(0,0,0,0.4), 0 0 0 2px #0a0804;
+            position: relative;
+        }
+        .portal-label {
+            font-size: 13px;
+            color: #d0c0a0;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            white-space: nowrap;
+            text-shadow: 2px 2px 0 #1a1208;
+        }
+
+        /* MC风格按钮 */
+        .pixel-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 11px 24px;
+            font-size: 13px;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.08s ease;
+            z-index: 2;
+            white-space: nowrap;
+            min-width: 140px;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: bold;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            border: 3px solid #1a1208;
+            border-top-color: #b0a080;
+            border-left-color: #b0a080;
+            border-right-color: #4a3a2a;
+            border-bottom-color: #2a1a0a;
+            box-shadow:
+                inset 1px 1px 0 rgba(255,255,255,0.15),
+                inset -2px -2px 0 rgba(0,0,0,0.3),
+                0 4px 0 #1a1208,
+                0 6px 0 rgba(0,0,0,0.4);
+            background: #6b5a3e;
+            background-image:
+                linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(255,255,255,0.04) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(0,0,0,0.04) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(0,0,0,0.04) 75%);
+            background-size: 8px 8px;
+            background-position: 0 0, 0 4px, 4px -4px, -4px 0;
+            color: #f5f0e0;
+            text-shadow: 2px 2px 0 #3a2a18;
+            position: relative;
+            transform: translateY(0);
+        }
+
+        .pixel-btn:hover:not(:disabled) {
+            background: #7a6a4a;
+            background-image:
+                linear-gradient(45deg, rgba(255,255,255,0.06) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(255,255,255,0.06) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(0,0,0,0.04) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(0,0,0,0.04) 75%);
+            background-size: 8px 8px;
+            color: #ffffc0;
+            border-top-color: #d0c0a0;
+            border-left-color: #d0c0a0;
+            transform: translateY(-1px);
+            box-shadow:
+                inset 1px 1px 0 rgba(255,255,255,0.25),
+                inset -2px -2px 0 rgba(0,0,0,0.3),
+                0 5px 0 #1a1208,
+                0 7px 0 rgba(0,0,0,0.4);
+        }
+
+        .pixel-btn:active:not(:disabled) {
+            transform: translateY(3px);
+            border-top-color: #4a3a2a;
+            border-left-color: #4a3a2a;
+            border-right-color: #b0a080;
+            border-bottom-color: #b0a080;
+            box-shadow:
+                inset 1px 1px 0 rgba(0,0,0,0.3),
+                inset -1px -1px 0 rgba(255,255,255,0.08),
+                0 1px 0 #1a1208;
+        }
+
+        .pixel-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            filter: grayscale(0.3);
+        }
+
+        .btn-portal {
+            background: #4a5a3a;
+            color: #d0e8c0;
+            text-shadow: 2px 2px 0 #1a2a0a;
+            box-shadow:
+                inset 1px 1px 0 rgba(255,255,255,0.15),
+                inset -2px -2px 0 rgba(0,0,0,0.3),
+                0 4px 0 #1a1208,
+                0 6px 0 rgba(0,0,0,0.4),
+                0 0 12px rgba(90,158,255,0.25);
+        }
+
+        .btn-portal:hover:not(:disabled) {
+            background: #5a6a4a;
+            color: #e0f8d0;
+            box-shadow:
+                inset 1px 1px 0 rgba(255,255,255,0.25),
+                inset -2px -2px 0 rgba(0,0,0,0.3),
+                0 5px 0 #1a1208,
+                0 7px 0 rgba(0,0,0,0.4),
+                0 0 20px rgba(90,158,255,0.4);
+        }
+
+        .btn-qq {
+            background: #5a3a4a;
+            color: #f0d0e0;
+            text-shadow: 2px 2px 0 #2a0a1a;
+            box-shadow:
+                inset 1px 1px 0 rgba(255,255,255,0.15),
+                inset -2px -2px 0 rgba(0,0,0,0.3),
+                0 4px 0 #1a1208,
+                0 6px 0 rgba(0,0,0,0.4),
+                0 0 12px rgba(255,107,157,0.25);
+        }
+
+        .btn-qq:hover:not(:disabled) {
+            background: #6a4a5a;
+            color: #ffe0f0;
+            box-shadow:
+                inset 1px 1px 0 rgba(255,255,255,0.25),
+                inset -2px -2px 0 rgba(0,0,0,0.3),
+                0 5px 0 #1a1208,
+                0 7px 0 rgba(0,0,0,0.4),
+                0 0 20px rgba(255,107,157,0.4);
+        }
+
+        .btn-portal.charging {
+            animation: btnChargeMcBlue 0.35s ease-in-out infinite;
+            background: #5a9eff !important;
+            border-color: #5a9eff !important;
+            color: #fff !important;
+            box-shadow:
+                inset 1px 1px 0 rgba(255,255,255,0.3),
+                inset -2px -2px 0 rgba(0,0,0,0.3),
+                0 5px 0 #1a4a6a,
+                0 7px 0 rgba(0,0,0,0.4),
+                0 0 28px rgba(90,158,255,0.7) !important;
+        }
+        @keyframes btnChargeMcBlue {
+            0%,100% { box-shadow: inset 1px 1px 0 rgba(255,255,255,0.3), inset -2px -2px 0 rgba(0,0,0,0.3), 0 5px 0 #1a4a6a, 0 7px 0 rgba(0,0,0,0.4), 0 0 28px rgba(90,158,255,0.7); }
+            50% { box-shadow: inset 1px 1px 0 rgba(255,255,255,0.5), inset -2px -2px 0 rgba(0,0,0,0.3), 0 5px 0 #1a4a6a, 0 7px 0 rgba(0,0,0,0.4), 0 0 48px rgba(90,200,255,1); }
+        }
+
+        .btn-qq.charging {
+            animation: btnChargeMcPink 0.35s ease-in-out infinite;
+            background: #ff6b9d !important;
+            border-color: #ff6b9d !important;
+            color: #fff !important;
+            box-shadow:
+                inset 1px 1px 0 rgba(255,255,255,0.3),
+                inset -2px -2px 0 rgba(0,0,0,0.3),
+                0 5px 0 #4a1a2a,
+                0 7px 0 rgba(0,0,0,0.4),
+                0 0 28px rgba(255,107,157,0.7) !important;
+        }
+        @keyframes btnChargeMcPink {
+            0%,100% { box-shadow: inset 1px 1px 0 rgba(255,255,255,0.3), inset -2px -2px 0 rgba(0,0,0,0.3), 0 5px 0 #4a1a2a, 0 7px 0 rgba(0,0,0,0.4), 0 0 28px rgba(255,107,157,0.7); }
+            50% { box-shadow: inset 1px 1px 0 rgba(255,255,255,0.5), inset -2px -2px 0 rgba(0,0,0,0.3), 0 5px 0 #4a1a2a, 0 7px 0 rgba(0,0,0,0.4), 0 0 48px rgba(255,120,200,1); }
+        }
+
+        .portal-rune { font-size: 11px; color: #8a7a5a; z-index: 2; border-left: 3px double #4a3a2a; padding-left: 12px; white-space: nowrap; }
+
+        .pixel-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
+        .pixel-card {
+            background: var(--mc-card-bg);
+            background-image:
+                linear-gradient(180deg, rgba(255,255,255,0.015) 0%, transparent 50%, rgba(0,0,0,0.04) 100%);
+            border: 3px solid var(--mc-border-dark);
+            border-top-color: #5a4a3a;
+            border-left-color: #5a4a3a;
+            border-right-color: #2a1a0a;
+            border-bottom-color: #2a1a0a;
+            padding: 11px 13px;
+            box-shadow: inset 0 0 12px rgba(0,0,0,0.4), 0 2px 0 #0a0804, 0 3px 0 rgba(0,0,0,0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+            transform: scale(1) translateZ(0);
+        }
+        .pixel-card:hover {
+            border-color: #8a7a5a;
+            border-top-color: #b0a080;
+            border-left-color: #b0a080;
+            box-shadow: inset 0 0 18px rgba(0,0,0,0.5), 0 2px 0 #0a0804, 0 4px 0 rgba(0,0,0,0.3), 0 0 18px rgba(232,195,75,0.15);
+            transform: scale(1.03) translateZ(0);
+        }
+        .pixel-card.selected {
+            transform: scale(1.12) translateZ(40px);
+            border-color: rgba(255,200,80,0.8);
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.6), 0 8px 30px rgba(0,0,0,0.5), 0 0 25px rgba(255,180,60,0.4);
+            z-index: 10;
+            background: #3a2a18;
+        }
+        .pixel-card.selected::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            border: 2px solid rgba(255,200,80,0.6);
+            pointer-events: none;
+            animation: selectedGlow 1.5s ease-in-out infinite;
+        }
+        @keyframes selectedGlow {
+            0%,100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        .card-icon-block { font-size: 20px; margin-bottom: 4px; filter: drop-shadow(2px 2px 0 #0a0804); }
+        .card-title-pixel {
+            font-size: 12px;
+            color: var(--pixel-gold);
+            margin-bottom: 4px;
+            text-shadow: 2px 2px 0 #1a1208;
+            letter-spacing: 0.06em;
+        }
+        .card-divider-pixel {
+            height: 2px;
+            background: repeating-linear-gradient(90deg, #3a2a18 0px, #3a2a18 3px, transparent 3px, transparent 6px);
+            margin: 3px 0 5px 0;
+        }
+        .card-desc {
+            font-size: 10px;
+            color: #c0b090;
+            line-height: 1.45;
+            flex: 1;
+            transition: all 0.3s;
+        }
+        .card-desc em { color: #e8c34b; font-style: normal; text-shadow: 0 0 4px rgba(232,195,75,0.2); }
+        .card-codename {
+            display: inline-block;
+            font-size: 8px;
+            color: #8a7a5a;
+            margin-top: 4px;
+            border: 2px dotted #3a2a18;
+            padding: 2px 6px;
+            background: #1a1208;
+        }
+
+        .mod-list {
+            display: none;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(232,195,75,0.3);
+            flex: 1;
+        }
+        .pixel-card.selected .mod-list {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .pixel-card.selected .card-desc {
+            display: none;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .mod-list-title {
+            font-size: 9px;
+            color: var(--pixel-gold);
+            margin-bottom: 4px;
+            letter-spacing: 0.1em;
+        }
+        .mod-list-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+        }
+        .mod-tag {
+            font-size: 8px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(180,140,60,0.3);
+            padding: 2px 5px;
+            color: #c0b090;
+            white-space: nowrap;
+        }
+
+        .footer-pixel {
+            text-align: center;
+            font-size: 9px;
+            color: #5a4a3a;
+            border-top: 2px dashed #3a2a18;
+            padding-top: 8px;
+            opacity: 0.7;
+        }
+
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:flex; justify-content:center; align-items:center; z-index:100; opacity:0; pointer-events:none; transition:opacity 0.15s; }
+        .modal-overlay.active { opacity:1; pointer-events:auto; }
+        .modal-dialog {
+            background: var(--mc-panel-bg);
+            background-image: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 50%, rgba(0,0,0,0.05) 100%);
+            border: 5px solid var(--mc-border-dark);
+            border-top-color: var(--mc-border-light);
+            border-left-color: var(--mc-border-light);
+            border-right-color: #3a2a18;
+            border-bottom-color: #3a2a18;
+            padding: 22px 26px;
+            max-width: 420px;
+            width: 88%;
+            box-shadow: 0 0 0 3px #0a0804, 0 0 40px rgba(0,0,0,0.8), 0 0 60px rgba(232,195,75,0.15);
+            text-align: center;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        .modal-title { font-size: 16px; color: var(--pixel-gold); margin-bottom: 14px; text-shadow: 2px 2px 0 #1a1208, 0 0 10px var(--glow-gold); }
+        .modal-text { font-size: 12px; color: #d0c8b0; line-height: 2.2; margin-bottom: 22px; }
+        .modal-text .highlight { color: var(--pixel-ember-bright); text-shadow: 0 0 10px var(--glow-ember); }
+        .modal-buttons { display:flex; justify-content:center; gap:16px; flex-wrap:wrap; }
+        .modal-btn {
+            padding: 9px 22px;
+            font-size: 12px;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            border: 3px solid #1a1208;
+            border-top-color: #b0a080;
+            border-left-color: #b0a080;
+            border-right-color: #4a3a2a;
+            border-bottom-color: #2a1a0a;
+            background: #5c5040;
+            color: #e0d0b0;
+            cursor: pointer;
+            box-shadow: inset 1px 1px 0 rgba(255,255,255,0.1), inset -1px -1px 0 rgba(0,0,0,0.2), 0 3px 0 #1a1208;
+            transition: all 0.08s;
+            white-space: nowrap;
+            text-shadow: 1px 1px 0 #2a1a0a;
+        }
+        .modal-btn:hover { background: #6b5a3e; color: #fff; border-top-color: #d0c0a0; border-left-color: #d0c0a0; }
+        .modal-btn.confirm {
+            color: #ffe0b0;
+            border-top-color: #d0a080;
+            border-left-color: #d0a080;
+            background: #5a3a2a;
+            box-shadow: inset 1px 1px 0 rgba(255,255,255,0.1), inset -1px -1px 0 rgba(0,0,0,0.2), 0 3px 0 #2a1a0a, 0 0 12px rgba(224,122,61,0.3);
+        }
+        .modal-btn.confirm:hover { background: #6a4a3a; color: #fff; }
+
+        @media(max-width:1000px) {
+            .pixel-grid { grid-template-columns: repeat(2,1fr); }
+            .server-info-strip { gap: 12px; }
+            .portal-panel { gap: 12px; }
+            .portal-rune { display: none; }
+            body { font-size: 13px; }
+            .pixel-title { font-size: clamp(20px, 6vw, 30px); }
+            .scanline-text { font-size: 10px; letter-spacing: 0.3em; }
+            .pixel-btn { min-width: 120px; padding: 8px 16px; font-size: 12px; }
+            .pixel-card.selected { transform: scale(1.06); }
+        }
+        @media(max-width:500px) {
+            .pixel-grid { grid-template-columns:1fr; }
+            .pixel-title { font-size: clamp(18px, 7vw, 24px); letter-spacing: 0.08em; }
+            .scanline-text { font-size: 9px; letter-spacing: 0.2em; }
+            .server-info-strip { flex-wrap: wrap; gap: 5px; padding: 7px 8px; }
+            .server-tag { font-size: 9px; }
+            .portal-panel { gap: 5px; padding: 7px; flex-wrap: nowrap; }
+            .portal-label { font-size: 10px; }
+            .pixel-btn { padding: 6px 8px; font-size: 9px; min-width: 90px; flex-shrink: 0; }
+            body { font-size: 10px; padding: 5px; }
+            .main-screen { padding: 10px; }
+            .card-desc { font-size: 9px; }
+            .sub-header { font-size: 9px; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="star-canvas"></canvas>
+
+    <div class="pixel-crt" id="terminal">
+        <div class="pixel-corner tl"></div>
+        <div class="pixel-corner tr"></div>
+        <div class="pixel-corner bl"></div>
+        <div class="pixel-corner br"></div>
+
+        <div class="main-screen">
+            <div class="header-block">
+                <div class="scanline-text">[ 冒险者终端 // 连接到：新世界 ]</div>
+                <h1 class="pixel-title" id="main-title">新世界·想象之上</h1>
+                <div class="sub-header">✦ 原初大陆 · 纯净生存史诗 ✦</div>
+            </div>
+
+            <div class="server-info-strip">
+                <span class="server-tag">
+                    <span class="dot-indicator" id="status-dot"></span> 世界状态：<em id="status-text">探知中…</em>
+                </span>
+                <span class="server-tag" id="player-tag" style="display:none;">
+                    👥 同行旅者：<em id="player-text">0 / 0</em>
+                </span>
+                <span class="server-tag">📜 世界律法：<em>JE 26.1.2 原版规则</em></span>
+                <span class="server-tag">🏕️ 生存法则：<em>纯净生存 · 无 mod 侵染</em></span>
+                <span class="server-tag">✨ 赐福：<em>整合包视觉重塑</em></span>
+            </div>
+
+            <div class="portal-panel">
+                <span class="portal-label"><span style="font-size:1.3em;">⬡</span> 传送锚点</span>
+                <button class="pixel-btn btn-portal" id="portal-btn">
+                    获取圣物 <span class="btn-arrow">▶</span>
+                </button>
+                <button class="pixel-btn btn-qq" id="qq-btn">
+                    加入冒险旅团 <span class="btn-arrow">▶</span>
+                </button>
+                <span class="portal-rune">* 坐标稳定 · 随时跃迁 *</span>
+            </div>
+
+            <div class="pixel-grid" id="card-grid">
+                <div class="pixel-card" data-index="0">
+                    <div class="card-icon-block">⚙️</div>
+                    <div class="card-title-pixel">核心引擎</div>
+                    <div class="card-divider-pixel"></div>
+                    <p class="card-desc">古老的优化之术已悄然融入这片大地的脉搏。内存碎片被温柔抚平，区块流转如林间溪水般自然。纵使你踏入万灯辉映的繁华聚落，抑或潜入熔岩奔涌的深渊裂隙，<em>卡顿与迟滞皆如晨雾消散</em>，只留丝绸般的顺滑体感。</p>
+                    <div class="mod-list">
+                        <div class="mod-list-title">▸ 大地深处苏醒的低语</div>
+                        <div class="mod-list-items">
+                            <span class="mod-tag">钠</span><span class="mod-tag">锂</span><span class="mod-tag">铁氧体磁芯</span><span class="mod-tag">C²M 引擎</span>
+                            <span class="mod-tag">立即快速</span><span class="mod-tag">现代化修复</span><span class="mod-tag">不良优化清理</span>
+                            <span class="mod-tag">服务器核心</span><span class="mod-tag">极速内存优化</span><span class="mod-tag">交替电流</span>
+                            <span class="mod-tag">崩溃漏洞修复</span><span class="mod-tag">结构布局优化</span>
+                        </div>
+                    </div>
+                    <span class="card-codename"># 大地脉搏</span>
+                </div>
+                <div class="pixel-card" data-index="1">
+                    <div class="card-icon-block">🔮</div>
+                    <div class="card-title-pixel">光影重铸</div>
+                    <div class="card-divider-pixel"></div>
+                    <p class="card-desc">晨曦与暮霭的法则被重新书写。光线穿过针叶林时会洒下斑驳碎金，雨后石板上映着摇曳灯火，连最不起眼的地下矿道也拥有了空气的厚度。<em>每一帧皆如画师手笔</em>，随手截图便是献给旅途的诗歌。</p>
+                    <div class="mod-list">
+                        <div class="mod-list-title">▸ 晨曦与暮霭的重写之书</div>
+                        <div class="mod-list-items">
+                            <span class="mod-tag">Iris</span><span class="mod-tag">Sodium Extra</span><span class="mod-tag">Reese's Sodium Options</span>
+                            <span class="mod-tag">Continuity</span><span class="mod-tag">Euphoria Patcher</span><span class="mod-tag">ScalableLux</span>
+                            <span class="mod-tag">Complementary Reimagined</span><span class="mod-tag">Derivative Shaders</span><span class="mod-tag">IterationT Shaders</span>
+                        </div>
+                    </div>
+                    <span class="card-codename"># 晨曦滤镜</span>
+                </div>
+                <div class="pixel-card" data-index="2">
+                    <div class="card-icon-block">🎨</div>
+                    <div class="card-title-pixel">纹理重塑</div>
+                    <div class="card-divider-pixel"></div>
+                    <p class="card-desc">大地上的万物皆被赋予了崭新的灵魂。钻石剑刃流转着冷冽锋芒，橡木盾牌铭刻着岁月纹路，连路边的野花也拥有了随风轻颤的娇嫩姿态。<em>方块依然是那个方块，质感却已天翻地覆</em>，浑然天成。</p>
+                    <div class="mod-list">
+                        <div class="mod-list-title">▸ 万物重织的匠心神谕</div>
+                        <div class="mod-list-items">
+                            <span class="mod-tag">连续性材质</span><span class="mod-tag">Euphoria 补丁</span><span class="mod-tag">Pixlli 128x</span>
+                            <span class="mod-tag">SPBR 16x</span><span class="mod-tag">Fresh 动画</span><span class="mod-tag">HyperPunchy 材质</span>
+                            <span class="mod-tag">Fancy 床铺</span><span class="mod-tag">精炼水桶</span><span class="mod-tag">更好的灯笼</span>
+                            <span class="mod-tag">Drigo 3D 灯笼</span><span class="mod-tag">Fresh 末地水晶</span><span class="mod-tag">Fresh 花与植物</span>
+                        </div>
+                    </div>
+                    <span class="card-codename"># 万物新生</span>
+                </div>
+                <div class="pixel-card" data-index="3">
+                    <div class="card-icon-block">🗺️</div>
+                    <div class="card-title-pixel">星图导航</div>
+                    <div class="card-divider-pixel"></div>
+                    <p class="card-desc">两幅星图交叠于你的旅途——一幅悬于视野边缘，标注近处的地形与活物；一幅铺展于书斋之中，记录你踏足的每一寸土地。<em>自此，归家之路永不忘却</em>，星辰将指引你穿越迷雾与岔路。</p>
+                    <div class="mod-list">
+                        <div class="mod-list-title">▸ 星辰铺展的双重舆图</div>
+                        <div class="mod-list-items">
+                            <span class="mod-tag">Xaero 世界地图</span><span class="mod-tag">Xaero 小地图</span>
+                            <span class="mod-tag">Xaero 缩放</span><span class="mod-tag">金合欢地图翻译</span>
+                        </div>
+                    </div>
+                    <span class="card-codename"># 星辰引路</span>
+                </div>
+                <div class="pixel-card" data-index="4">
+                    <div class="card-icon-block">🌿</div>
+                    <div class="card-title-pixel">微光尘舞</div>
+                    <div class="card-divider-pixel"></div>
+                    <p class="card-desc">阳光穿过林间时洒下浮动的微尘，樱花般的粒子在微风中打着旋儿飘落。草丛间偶尔惊起几只萤火，矿洞里火星溅射在岩壁上——这片大陆的每一个角落都在静静诉说自己的故事，<em>世界不再是静止的画布</em>，而是与你一同呼吸的生命。</p>
+                    <div class="mod-list">
+                        <div class="mod-list-title">▸ 风与尘的轻吟诗篇</div>
+                        <div class="mod-list-items">
+                            <span class="mod-tag">可视性粒子</span><span class="mod-tag">粒子效果</span><span class="mod-tag">落叶</span>
+                            <span class="mod-tag">经验机制改革</span><span class="mod-tag">精致实体渲染</span><span class="mod-tag">动画物品</span>
+                            <span class="mod-tag">物品栏粒子</span><span class="mod-tag">EG 粒子交互</span><span class="mod-tag">远景优化</span>
+                        </div>
+                    </div>
+                    <span class="card-codename"># 风与尘语</span>
+                </div>
+                <div class="pixel-card" data-index="5">
+                    <div class="card-icon-block">🎵</div>
+                    <div class="card-title-pixel">风吟天籁</div>
+                    <div class="card-divider-pixel"></div>
+                    <p class="card-desc">风之贤者将声律的祝福洒满大地。洞穴深处的水滴荡开真实的回响，森林里不同方向的鸟鸣交织成歌，不同方块上的脚步声诉说着各自的故事。<em>闭上双眼，你仍能感知世界的呼吸与脉动</em>。</p>
+                    <div class="mod-list">
+                        <div class="mod-list-title">▸ 风之贤者的声律祝福</div>
+                        <div class="mod-list-items">
+                            <span class="mod-tag">脚步声</span><span class="mod-tag">自然音效</span><span class="mod-tag">物理声效重制</span>
+                            <span class="mod-tag">声音</span><span class="mod-tag">聊天工具箱</span><span class="mod-tag">更好的F3</span>
+                        </div>
+                    </div>
+                    <span class="card-codename"># 风之低语</span>
+                </div>
+                <div class="pixel-card" data-index="6">
+                    <div class="card-icon-block">🦸</div>
+                    <div class="card-title-pixel">角色神形</div>
+                    <div class="card-divider-pixel"></div>
+                    <p class="card-desc">你的化身在这片大陆上获得了真正的灵魂。皮肤层次分明如真实的衣物，披风在风中猎猎飘扬，铠甲闪烁着金属的冷光。<em>每一个动作都充满仪式感</em>，让你的旅途拥有独一无二的史诗气质。</p>
+                    <div class="mod-list">
+                        <div class="mod-list-title">▸ 化身觉醒的形魂法典</div>
+                        <div class="mod-list-items">
+                            <span class="mod-tag">3D 皮肤层</span><span class="mod-tag">实体模型特性</span><span class="mod-tag">实体纹理特性</span>
+                            <span class="mod-tag">实体渲染优化</span><span class="mod-tag">飘扬披风</span><span class="mod-tag">万用皮肤补丁</span>
+                            <span class="mod-tag">ClientID</span><span class="mod-tag">FeatherMorph</span><span class="mod-tag">Female Gender</span>
+                        </div>
+                    </div>
+                    <span class="card-codename"># 化身觉醒</span>
+                </div>
+                <div class="pixel-card" data-index="7">
+                    <div class="card-icon-block">👁️</div>
+                    <div class="card-title-pixel">灵智界面</div>
+                    <div class="card-divider-pixel"></div>
+                    <p class="card-desc">情报之灵将所有的知识编织于视野边缘。鼠标轻悬即可洞悉物品的前世今生，背包学会了自我整理与补充，建筑蓝图能直接投影于世间。<em>信息如流水般自然呈现</em>，无需再翻阅厚重的古代典籍。</p>
+                    <div class="mod-list">
+                        <div class="mod-list-title">▸ 情报之灵的编织法典</div>
+                        <div class="mod-list-items">
+                            <span class="mod-tag">JEI 物品管理器</span><span class="mod-tag">玉 🔍</span><span class="mod-tag">一键背包整理Next</span>
+                            <span class="mod-tag">投影</span><span class="mod-tag">鼠标手势</span><span class="mod-tag">提示框滚动</span>
+                            <span class="mod-tag">手持物品信息</span><span class="mod-tag">食物效果显示</span><span class="mod-tag">更好的F3</span>
+                            <span class="mod-tag">模组菜单</span>
+                        </div>
+                    </div>
+                    <span class="card-codename"># 灵智之眼</span>
+                </div>
+            </div>
+
+            <div class="footer-pixel">
+                ◆ 新世界 · 原初大陆 ◆  |  * 纯净生存 · 极致美化 *  |  ◆ 愿像素之光指引前路 ◆
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-portal">
+        <div class="modal-dialog">
+            <div class="modal-title">◆ 圣物传送确认 ◆</div>
+            <div class="modal-text">
+                即将开启传送门，前往<span class="highlight">夸克档案馆</span><br>
+                获取本服务器专属的<span class="highlight">「想象之上」整合圣物</span><br>
+                此物仅强化画面与声效，不改原版生存规则<br>
+                是否确认开启传送？
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" data-modal="modal-portal">◇ 暂缓启程 ◇</button>
+                <button class="modal-btn confirm" id="confirm-portal">◆ 开启传送 ◆</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-qq">
+        <div class="modal-dialog">
+            <div class="modal-title">◆ 旅团通讯接入 ◆</div>
+            <div class="modal-text">
+                即将连接到<span class="highlight">新世界 冒险旅团</span><br>
+                通讯频道：<span class="highlight">QQ 群聊阵列</span><br>
+                加入后获取服务器地址、整合包帮助与最新动态<br>
+                是否确认接入？
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" data-modal="modal-qq">◇ 暂缓接入 ◇</button>
+                <button class="modal-btn confirm" id="confirm-qq">◆ 加入旅团 ◆</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const canvas = document.getElementById('star-canvas');
+            const ctx = canvas.getContext('2d');
+            let w, h;
+            const stars = [];
+            const STAR_COUNT = 45;
+            function resizeCanvas() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+            resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+            for (let i = 0; i < STAR_COUNT; i++) {
+                stars.push({ x: Math.random() * w, y: Math.random() * h, size: Math.random() * 2 + 1, speed: Math.random() * 0.2 + 0.08, opacity: Math.random(), phase: Math.random() * Math.PI * 2 });
+            }
+            function drawStars(timestamp) {
+                ctx.clearRect(0, 0, w, h);
+                for (const star of stars) {
+                    const twinkle = Math.sin(timestamp * 0.0008 * star.speed * 3 + star.phase) * 0.35 + 0.65;
+                    const alpha = star.opacity * twinkle;
+                    ctx.fillStyle = `rgba(255,220,160,${alpha})`;
+                    ctx.fillRect(Math.floor(star.x), Math.floor(star.y), Math.ceil(star.size), Math.ceil(star.size));
+                }
+                requestAnimationFrame(drawStars);
+            }
+            requestAnimationFrame(drawStars);
+
+            const terminal = document.getElementById('terminal');
+            const mainTitle = document.getElementById('main-title');
+            const portalBtn = document.getElementById('portal-btn');
+            const qqBtn = document.getElementById('qq-btn');
+            const modalPortal = document.getElementById('modal-portal');
+            const modalQQ = document.getElementById('modal-qq');
+            const confirmPortal = document.getElementById('confirm-portal');
+            const confirmQQ = document.getElementById('confirm-qq');
+            const targetUrl = 'https://pan.quark.cn/s/5701c17a4923';
+            const qqGroupUrl = 'https://qun.qq.com/universal-share/share?ac=1&authKey=Df%2BAq4fIW%2BvKoBaQ2VZu%2Fw5Mf%2BLoQ50ReDEZuxc%2FMB4nd4V%2FmhgHlThGHS5GIaux&busi_data=eyJncm91cENvZGUiOiIxMDkxOTI3MzA3IiwidG9rZW4iOiIzaXp0akx5SUh5N0VYbFByY0I1ekpOTUlDVm9tR3ovdnFZZlRFVFJ3Smx6N0s0d25FN2dNT3lPWFJjY2JOVEMxIiwidWluIjoiMjI0NTM0MTkzMyJ9&data=TN5WKtS0ScLXKJWMMYNr4I6yWGm9ff5alQSoJ3R8dOzTq5F_LdgssHKsss12hSJUM1crwqzW2LHP9dtW2eQaFg&svctype=4&tempid=h5_group_info';
+            const originalPortalHTML = portalBtn.innerHTML;
+            const originalQQHTML = qqBtn.innerHTML;
+            let isCharging = false;
+
+            function startCharge(btn, modal, chargeClass) {
+                if (isCharging) return;
+                isCharging = true;
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '建立链接中 ⌛';
+                btn.disabled = true; btn.classList.add('charging');
+                terminal.classList.add(chargeClass);
+                mainTitle.classList.add('title-active');
+                setTimeout(() => {
+                    mainTitle.classList.remove('title-active');
+                }, 1600);
+                setTimeout(() => {
+                    terminal.classList.remove(chargeClass); btn.classList.remove('charging');
+                    btn.innerHTML = originalHTML; btn.disabled = false; isCharging = false;
+                    modal.classList.add('active');
+                }, 1600);
+            }
+            function closeModal(modal) { modal.classList.remove('active'); }
+            portalBtn.addEventListener('click', () => startCharge(portalBtn, modalPortal, 'powering-up-blue'));
+            qqBtn.addEventListener('click', () => startCharge(qqBtn, modalQQ, 'powering-up-pink'));
+            confirmPortal.addEventListener('click', () => { window.open(targetUrl, '_blank'); closeModal(modalPortal); });
+            confirmQQ.addEventListener('click', () => { window.open(qqGroupUrl, '_blank'); closeModal(modalQQ); });
+            document.querySelectorAll('.modal-btn.cancel').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const modalId = this.getAttribute('data-modal');
+                    const modal = document.getElementById(modalId);
+                    if (modal) closeModal(modal);
+                });
+            });
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.addEventListener('click', function(e) { if (e.target === overlay) closeModal(overlay); });
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.active').forEach(m => closeModal(m));
+            });
+
+            const statusDot = document.getElementById('status-dot');
+const statusText = document.getElementById('status-text');
+const playerTag = document.getElementById('player-tag');
+const playerText = document.getElementById('player-text');
+const serverAddress = 'xxx.xxx.xxx'; // 请确保这是你真实的服务器地址
+
+// ---------- 替换：在线人数与状态检测（开始） ----------
+async function checkServerStatus() {
+    // 辅助函数：显示在线 UI（有人数数据）
+    // 新的 showOnline 函数（替换原来的）
+function showOnline(online, max) {
+    statusDot.style.background = '#5a5';
+    statusDot.style.boxShadow = '0 0 10px #5a5';
+    statusText.textContent = '生机勃勃';
+
+    // 只有当在线人数 > 0 时才显示具体数字，否则显示“旅者隐匿”
+    if (typeof online === 'number' && online > 0 && typeof max === 'number' && max > 0) {
+        playerTag.style.display = 'flex';
+        playerText.textContent = `${online} / ${max}`;
+        if (online >= max) playerText.style.color = '#ff9999';
+        else if (online > max * 0.7) playerText.style.color = '#ffcc66';
+        else playerText.style.color = '#99ff99';
+    } else if (typeof online === 'number' && online > 0) {
+        playerTag.style.display = 'flex';
+        playerText.textContent = `${online} 人在线`;
+        playerText.style.color = '#99ff99';
+    } else {
+        // 人数未知或为 0，显示“旅者隐匿”
+        playerTag.style.display = 'flex';
+        playerText.textContent = '旅者隐匿';
+        playerText.style.color = '#888';
+    }
+}
+
+    // 辅助函数：显示离线 UI
+    function showOffline() {
+        statusDot.style.background = '#c55';
+        statusDot.style.boxShadow = '0 0 10px #c55';
+        statusText.textContent = '黯蚀笼罩';
+        playerTag.style.display = 'none';
+    }
+
+    // 辅助函数：显示错误 UI
+    function showError() {
+        statusDot.style.background = '#888';
+        statusDot.style.boxShadow = '0 0 6px #888';
+        statusText.textContent = '感知受阻';
+        playerTag.style.display = 'none';
+    }
+
+    // 三种 API 的请求工具
+    async function fetchJSON(url) {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
+        try {
+            const res = await fetch(url, { signal: controller.signal });
+            clearTimeout(timeout);
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return await res.json();
+        } catch (err) {
+            return null;
+        }
+    }
+
+    // 并行查询三个 API
+    const [data1, data2, data3] = await Promise.all([
+        fetchJSON(`https://api.mcstatus.io/v2/status/java/${serverAddress}`),
+        fetchJSON(`https://api.mcsrvstat.us/2/${serverAddress}`),
+        fetchJSON(`https://mcapi.us/server/status?ip=${serverAddress}`)
+    ]);
+
+    // 收集所有有效的在线状态和人数信息
+    let anyOnline = false;      // 任何一个 API 返回在线，就是在线
+    let bestOnline = null;     // 最好的人数数据
+    let bestMax = null;
+
+    // 逐个解析返回值
+    if (data1) {
+        if (data1.online) {
+            anyOnline = true;
+            const o = data1.players?.online;
+            const m = data1.players?.max;
+            if (typeof o === 'number' && typeof m === 'number' && m > 0) {
+                bestOnline = o;
+                bestMax = m;
+            } else if (typeof o === 'number') {
+                bestOnline = o;
+                bestMax = 0;
+            }
+        }
+    }
+
+    if (data2) {
+        if (data2.online) {
+            anyOnline = true;
+            if (!bestOnline) {
+                const o = data2.players?.online;
+                const m = data2.players?.max;
+                if (typeof o === 'number' && typeof m === 'number' && m > 0) {
+                    bestOnline = o;
+                    bestMax = m;
+                } else if (typeof o === 'number') {
+                    bestOnline = o;
+                    bestMax = 0;
+                }
+            }
+        }
+    }
+
+    if (data3) {
+        if (data3.online) {
+            anyOnline = true;
+            if (!bestOnline) {
+                const o = data3.players?.now;
+                const m = data3.players?.max;
+                if (typeof o === 'number' && typeof m === 'number' && m > 0) {
+                    bestOnline = o;
+                    bestMax = m;
+                } else if (typeof o === 'number') {
+                    bestOnline = o;
+                    bestMax = 0;
+                }
+            }
+        }
+    }
+
+    // 根据分析结果更新界面
+    if (anyOnline) {
+        showOnline(bestOnline, bestMax);
+    } else {
+        // 所有 API 都没说在线，再判断是否全部失败
+        const allFailed = !data1 && !data2 && !data3;
+        if (allFailed) {
+            showError();
+        } else {
+            showOffline();
+        }
+    }
+}
+// ---------- 替换结束 ----------
+
+checkServerStatus();
+setInterval(checkServerStatus, 10000);
+
+            // 卡片选中切换
+            const cards = document.querySelectorAll('.pixel-card');
+            let selected = null;
+            cards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (selected === this) {
+                        this.classList.remove('selected');
+                        selected = null;
+                    } else {
+                        if (selected) selected.classList.remove('selected');
+                        this.classList.add('selected');
+                        selected = this;
+                    }
+                    e.stopPropagation();
+                });
+            });
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.pixel-card') && selected) {
+                    selected.classList.remove('selected');
+                    selected = null;
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
