@@ -1,6 +1,6 @@
-更新内容:更新测试texttexttexttexttext
-更新text换行测试text
-1.序号更新测试texttext
-2.网址更新测试https://micco.gt.tc/
-3.表情更新测试☺️
-4.github更新测试text
+更新内容:更新1.1.1
+1.更新背景音乐
+2.更新兼容的渐变主题
+3.更新服务器列表
+4.更新一些文本占位符
+5.加入凌晨睡觉提示
