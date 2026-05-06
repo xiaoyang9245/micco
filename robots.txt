@@ -1,7 +1,43 @@
-User-agent: bingbot
-Allow: /           # 允许必应主爬虫抓取整个网站
-
-User-agent: adidxbot
-Disallow: /        # 阻止必应广告爬虫抓取整个网站
-
-Sitemap: https://你的域名/sitemap.xml   # 告诉机器人网站地图的位置
+# robots.txt generated at https://uutool.cn/robots/
+User-agent: Baiduspider
+Disallow:
+User-agent: Sosospider
+Disallow:
+User-agent: sogou spider
+Disallow:
+User-agent: YodaoBot
+Disallow:
+User-agent: yisouspider
+Disallow:
+User-agent: Googlebot
+Disallow:
+User-agent: Bingbot
+Disallow:
+User-agent: Slurp
+Disallow:
+User-agent: Teoma
+Disallow:
+User-agent: twiceler
+Disallow:
+User-agent: MSNBot
+Disallow:
+User-agent: Scrubby
+Disallow:
+User-agent: Robozilla
+Disallow:
+User-agent: Gigabot
+Disallow:
+User-agent: googlebot-image
+Disallow:
+User-agent: googlebot-mobile
+Disallow:
+User-agent: yahoo-mmcrawler
+Disallow:
+User-agent: yahoo-blogs/v3.9
+Disallow:
+User-agent: psbot
+Disallow:
+User-agent: *
+Disallow:
+Disallow: /bin
+Sitemap: https://xiaoyang9245.github.io/xiaoyang9245/sitemap.xml
