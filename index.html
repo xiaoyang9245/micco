@@ -6,13 +6,13 @@
       <meta name="baidu-site-verification" content="codeva-tx6H4yXIXw" />
     
     <!-- 页面标题（搜索结果中显示的大标题） -->
-    <title>新手村·想象之上 | 原初大陆纯净生存服务器</title>
+    <title>星牧·想象之上 | 原初大陆纯净生存服务器</title>
     
     <!-- 页面描述（搜索结果中标题下方显示的文字） -->
-    <meta name="description" content="新手村·想象之上 - 原初大陆纯净生存史诗。极致美化、流畅优化、原版规则，加入冒险旅团开启你的Minecraft征程。">
+    <meta name="description" content="星牧·想象之上 - 原初大陆纯净生存史诗。极致美化、流畅优化、原版规则，加入冒险旅团开启你的Minecraft征程。">
     
     <!-- 关键词（百度等仍会参考） -->
-    <meta name="keywords" content="我的世界, Minecraft, 纯净生存, 服务器, 新手村, 整合包, 冒险">
+    <meta name="keywords" content="我的世界, Minecraft, 纯净生存, 服务器, 星牧, 整合包, 冒险">
     
     <!-- 作者 -->
     <meta name="author" content="xiaoyang9245和原初大陆的各位">
@@ -369,8 +369,8 @@
         </div>
         <div class="main-screen">
             <div class="header-block">
-                <div class="scanline-text">[ 冒险者终端 // 连接到：新手村 ]</div>
-                <h1 class="pixel-title" id="main-title">新手村·想象之上</h1>
+                <div class="scanline-text">[ 冒险者终端 // 连接到：星牧 ]</div>
+                <h1 class="pixel-title" id="main-title">星牧·想象之上</h1>
                 <div class="sub-header">✦ 原初大陆 · 纯净生存史诗 ✦</div>
             </div>
             <div class="server-info-strip">
@@ -413,12 +413,12 @@
                 <div class="season-card" id="season-autumn"><span class="season-emoji">🍂</span><span class="season-name"></span></div>
                 <div class="season-card" id="season-winter"><span class="season-emoji">❄️</span><span class="season-name"></span></div>
             </div>
-            <div class="footer-pixel">◆ 新手村 · 原初大陆 ◆  |  * 纯净生存 · 极致美化 *  |  ◆ 愿像素之光指引前路 ◆</div>
+            <div class="footer-pixel">◆ 星牧 · 原初大陆 ◆  |  * 纯净生存 · 极致美化 *  |  ◆ 愿像素之光指引前路 ◆</div>
         </div>
     </div>
     <div id="mobile-easter-egg" style="position: fixed; bottom: 10px; right: 10px; width: 20px; height: 20px; z-index: 999; opacity: 0.05; background: var(--pixel-gold); cursor: pointer; border-radius: 2px;"></div>
     <div class="modal-overlay" id="modal-portal"><div class="modal-dialog"><div class="modal-title">◆ 圣物传送确认 ◆</div><div class="modal-text">即将开启传送门，前往<span class="highlight">夸克档案馆</span><br>获取本服务器专属的<span class="highlight">「想象之上」整合圣物</span><br>此物仅强化画面与声效，不改原版生存规则<br>是否确认开启传送？</div><div class="modal-buttons"><button class="modal-btn cancel" data-modal="modal-portal">◇ 暂缓启程 ◇</button><button class="modal-btn confirm" id="confirm-portal">◆ 开启传送 ◆</button></div></div></div>
-    <div class="modal-overlay" id="modal-qq"><div class="modal-dialog"><div class="modal-title">◆ 旅团通讯接入 ◆</div><div class="modal-text">即将连接到<span class="highlight">新手村 冒险旅团</span><br>通讯频道：<span class="highlight">QQ 群聊阵列</span><br>加入后获取服务器地址、整合包帮助与最新动态<br>是否确认接入？</div><div class="modal-buttons"><button class="modal-btn cancel" data-modal="modal-qq">◇ 暂缓接入 ◇</button><button class="modal-btn confirm" id="confirm-qq">◆ 加入旅团 ◆</button></div></div></div>
+    <div class="modal-overlay" id="modal-qq"><div class="modal-dialog"><div class="modal-title">◆ 旅团通讯接入 ◆</div><div class="modal-text">即将连接到<span class="highlight">星牧 冒险旅团</span><br>通讯频道：<span class="highlight">QQ 群聊阵列</span><br>加入后获取服务器地址、整合包帮助与最新动态<br>是否确认接入？</div><div class="modal-buttons"><button class="modal-btn cancel" data-modal="modal-qq">◇ 暂缓接入 ◇</button><button class="modal-btn confirm" id="confirm-qq">◆ 加入旅团 ◆</button></div></div></div>
     <div class="modal-overlay" id="modal-pcl"><div class="modal-dialog"><div class="modal-title">◆ 远古秘藏 · 四钥封印 ◆</div><div class="modal-text">集齐四季真言，按“春→夏→秋→冬”顺序输入完整密钥。</div><input type="text" id="secret-key" class="secret-input" placeholder="请输入四季真言（春夏秋冬顺序)" autocomplete="off"><div class="modal-buttons"><button class="modal-btn cancel" data-modal="modal-pcl">◇ 暂缓 ◇</button><button class="modal-btn confirm" id="confirm-pcl">◆ 解封秘藏 ◆</button></div></div></div>
     <div class="modal-overlay" id="modal-success"><div class="modal-dialog"><div class="modal-title">◆ 封印解除 · 秘藏开启 ◆</div><div class="modal-text" id="success-message"></div><div class="modal-buttons" id="success-buttons"></div></div></div>
 
@@ -690,10 +690,10 @@ async function doLogin() {
             setInterval(() => { if (Math.random() < 0.03) flashSeasonKey(); }, 15000 + Math.random() * 15000);
 
             const seasonTitles = {
-                spring: ['新手村·初芽','新手村·绿潮','新手村·花咒','新手村·春醒','新手村·林径','新手村·妖精雨','新手村·荆棘冠','新手村·复苏歌','新手村·鹿鸣涧','新手村·迷雾种','新手村·风之信标','新手村·生命祭坛','新手村·原初之息','新手村·翠色协议','新手村·破晓远征'],
-                summer: ['新手村·炎息','新手村·沙暴','新手村·熔核','新手村·烈芒','新手村·雷鼓','新手村·火蛇舞','新手村·沙虫渊','新手村·龙巢热','新手村·雷暴核','新手村·蝉剑鸣','新手村·烈日祭坛','新手村·赤沙遗迹','新手村·炎魔之眼','新手村·雷云堡垒','新手村·狂战士营'],
-                autumn: ['新手村·金雨','新手村·枯骨','新手村·猎月','新手村·丰碑','新手村·锈刃','新手村·亡者醉','新手村·金币叶','新手村·古堡傀','新手村·凋零颂','新手村·黄昏猎','新手村·丰收祭典','新手村·魂引灯笼','新手村·堕落王座','新手村·秘银落叶','新手村·暮光决斗'],
-                winter: ['新手村·霜卫','新手村·永夜','新手村·寒渊','新手村·冰棘','新手村·寂塔','新手村·冰龙息','新手村·亡灵军','新手村·极光剑','新手村·雪怪嚎','新手村·落幕曲','新手村·冰封王座','新手村·凛冬领主','新手村·永夜庇护所','新手村·极光魔杖','新手村·最终誓约']
+                spring: ['星牧·初芽','星牧·绿潮','星牧·花咒','星牧·春醒','星牧·林径','星牧·妖精雨','星牧·荆棘冠','星牧·复苏歌','星牧·鹿鸣涧','星牧·迷雾种','星牧·风之信标','星牧·生命祭坛','星牧·原初之息','星牧·翠色协议','星牧·破晓远征'],
+                summer: ['星牧·炎息','星牧·沙暴','星牧·熔核','星牧·烈芒','星牧·雷鼓','星牧·火蛇舞','星牧·沙虫渊','星牧·龙巢热','星牧·雷暴核','星牧·蝉剑鸣','星牧·烈日祭坛','星牧·赤沙遗迹','星牧·炎魔之眼','星牧·雷云堡垒','星牧·狂战士营'],
+                autumn: ['星牧·金雨','星牧·枯骨','星牧·猎月','星牧·丰碑','星牧·锈刃','星牧·亡者醉','星牧·金币叶','星牧·古堡傀','星牧·凋零颂','星牧·黄昏猎','星牧·丰收祭典','星牧·魂引灯笼','星牧·堕落王座','星牧·秘银落叶','星牧·暮光决斗'],
+                winter: ['星牧·霜卫','星牧·永夜','星牧·寒渊','星牧·冰棘','星牧·寂塔','星牧·冰龙息','星牧·亡灵军','星牧·极光剑','星牧·雪怪嚎','星牧·落幕曲','星牧·冰封王座','星牧·凛冬领主','星牧·永夜庇护所','星牧·极光魔杖','星牧·最终誓约']
             };
             let currentTitleText = null;
             function getCurrentSeasonForTitle() { const m = new Date().getMonth() + 1; if (m >= 3 && m <= 5) return 'spring'; if (m >= 6 && m <= 8) return 'summer'; if (m >= 9 && m <= 11) return 'autumn'; return 'winter'; }
