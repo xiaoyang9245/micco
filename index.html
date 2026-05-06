@@ -623,8 +623,8 @@ async function doLogin() {
             const confirmPortal = document.getElementById('confirm-portal');
             const confirmQQ = document.getElementById('confirm-qq');
             const confirmPCL = document.getElementById('confirm-pcl');
-            const targetUrl = 'https://pan.quark.cn/s/af0fda1f3eb6';
-            const qqGroupUrl = 'https://qun.qq.com/universal-share/share?ac=1&authKey=Df%2BAq4fIW%2BvKoBaQ2VZu%2Fw5Mf%2BLoQ50ReDEZuxc%2FMB4nd4V%2FmhgHlThGHS5GIaux&busi_data=eyJncm91cENvZGUiOiIxMDkxOTI3MzA3IiwidG9rZW4iOiIzaXp0akx5SUh5N0VYbFByY0I1ekpOTUlDVm9tR3ovdnFZZlRFVFJ3Smx6N0s0d25FN2dNT3lPWFJjY2JOVEMxIiwidWluIjoiMjI0NTM0MTkzMyJ9&data=TN5WKtS0ScLXKJWMMYNr4I6yWGm9ff5alQSoJ3R8dOzTq5F_LdgssHKsss12hSJUM1crwqzW2LHP9dtW2eQaFg&svctype=4&tempid=h5_group_info';
+            const targetUrl = 'https://pan.quark.cn/s/036396eb447f';
+            const qqGroupUrl = '';
             let isCharging = false;
 
             function startCharge(btn, modal, chargeClass) { if (isCharging) return; isCharging = true; const originalHTML = btn.innerHTML; btn.innerHTML = '建立链接中 ⌛'; btn.disabled = true; btn.classList.add('charging'); terminal.classList.add(chargeClass); mainTitle.classList.add('title-active'); setTimeout(() => { mainTitle.classList.remove('title-active'); }, 1600); setTimeout(() => { terminal.classList.remove(chargeClass); btn.classList.remove('charging'); btn.innerHTML = originalHTML; btn.disabled = false; isCharging = false; modal.classList.add('active'); }, 1600); }
